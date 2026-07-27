@@ -81,9 +81,19 @@ streamlit run app.py
 
 ## Known Limitations
 
-- NovaMart context hardcoded (multi-tenant support coming)
-- User level randomization only (Geo experiments coming)
-- Marketing channels only for opportunity cost
+- NovaMart context hardcoded — multi-tenant support coming
+- User level randomization only — Geo experiments coming
+- Marketing channels only for opportunity cost calculation
+- Agent may occasionally skip clarifying questions (LangGraph forced flow in progress)
+
+## Coming Soon
+
+- PDF export of experiment design
+- Experiment memory — save and search past experiments
+- Dashboard — view all experiments, outcomes, learnings
+- Multi-tenant support — company specific context
+- Geo experiment support
+- Results Analyzer — upload results CSV, get plain English verdict
 
 ## Built By
 
