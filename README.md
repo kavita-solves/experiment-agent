@@ -14,7 +14,7 @@ You describe your experiment in plain English. The agent asks the right question
 
 ## Demo
 
-[Screenshot or GIF here]
+![Experiment Agent Demo](Experiment_agent_demo.gif)
 
 ## Tech Stack
 
@@ -78,6 +78,7 @@ cp .env.example .env
 # Run
 streamlit run app.py
 ```
+
 
 ## Known Limitations
 
