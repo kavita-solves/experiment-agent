@@ -1,103 +1,304 @@
-# Experiment Agent
+# 🧪 Experiment Designer AI
 
-AI-powered experimentation assistant that helps PMs and Marketers design rigorous A/B tests and holdout experiments — no data science degree needed.
+> Designing good experiments shouldn't require waiting for a data scientist.
 
-## What It Does
+Experiment Designer AI is an AI-powered assistant that helps Product Managers, Growth teams, and Marketers design statistically rigorous A/B tests and holdout experiments through a guided conversation.
 
-You describe your experiment in plain English. The agent asks the right questions and produces a complete experiment design including:
+Instead of generating a generic template, the agent asks follow-up questions, challenges ambiguous hypotheses, performs statistical calculations, and produces a complete experiment design in business language.
 
-- Problem Statement
-- Null & Alternative Hypothesis
-- Power Analysis (sample size, duration, confidence level)
-- Experiment Setup (split, eligibility, guardrail metrics)
-- Opportunity Cost (for holdout experiments)
+---
+
+## Why I Built This
+
+After spending 10+ years designing experiments across growth and marketing teams, I noticed the same pattern.
+
+Coming up with an experiment idea is usually easy.
+
+Designing a good experiment is not.
+
+Questions like:
+
+- Is this hypothesis measurable?
+- Should this be an A/B test or a holdout?
+- How much traffic do I need?
+- How long should the experiment run?
+- What should I measure?
+- What happens if we hold users out?
+
+almost always end up with a data scientist.
+
+I wanted to explore whether an AI agent could guide teams through that process while applying experimentation best practices.
+
+---
 
 ## Demo
 
-![Experiment Agent Demo](Experiment_agent_demo.gif)
+![Experiment Designer Demo](Experiment_agent_demo.gif)
 
-## Tech Stack
+---
 
-- **LangChain** — Agent orchestration
-- **GPT-4o** — Conversation & hypothesis generation
-- **Streamlit** — UI
-- **Python** — Sample size calculations (scipy)
+## What the Agent Does
 
-## Architecture
+The agent guides users through the complete experiment design process.
 
-User Input (Streamlit)
+### 1. Understand the Business Problem
 
-↓
+- Identifies the business objective
+- Clarifies the experiment idea
+- Determines the experiment type
 
-Agent (GPT-4o + LangChain)
+---
 
-↓
+### 2. Refine the Hypothesis
 
-Tools:
+Generates:
 
-├── detect_experiment — Marketing or Product
+- Problem Statement
+- Null Hypothesis
+- Alternative Hypothesis
 
-├── detect_channel — Email, Push, Web, In-app
+while asking follow-up questions whenever assumptions are unclear.
 
-├── calculate_sample_size — Proportion & Continuous
+---
 
-├── exp_hypothesis — Null & Alternative hypothesis
+### 3. Design the Experiment
 
-└── calculate_opportunity_cost — Holdout experiments
+Creates recommendations for:
 
-↓
+- Treatment & Control groups
+- Randomization strategy
+- Eligibility criteria
+- Success metrics
+- Guardrail metrics
 
-Experiment Design Output
+---
 
+### 4. Perform Statistical Calculations
 
-## Supported Channels
+Calculates:
 
-- Email — Subject line, CTA, Hero image, Send time
-- Push Notifications
-- Web — Landing pages, Checkout flow
-- In-app — Features, UI changes
+- Sample Size
+- Minimum Detectable Effect (MDE)
+- Statistical Power
+- Confidence Level
+- Estimated Experiment Duration
 
-## Setup
+using deterministic Python calculations.
+
+---
+
+### 5. Evaluate Business Trade-offs
+
+For holdout experiments, the agent estimates:
+
+- Opportunity Cost
+- Revenue at Risk
+- Expected Learning Value
+
+to help teams balance business impact with experimentation rigor.
+
+---
+
+# Example Output
+
+The final output includes:
+
+- Business Problem
+- Experiment Objective
+- Null & Alternative Hypothesis
+- Experiment Design
+- Treatment & Control Setup
+- Success Metrics
+- Guardrail Metrics
+- Sample Size
+- Experiment Duration
+- Opportunity Cost
+- Recommendations & Risks
+
+---
+
+# Architecture
+
+```
+             User
+              │
+              ▼
+        Streamlit UI
+              │
+              ▼
+      LangChain Agent
+              │
+     ┌────────┼─────────┐
+     │        │         │
+     ▼        ▼         ▼
+
+Experiment   Statistical   Business
+Reasoning    Calculations  Logic
+
+     │
+     ▼
+
+Experiment Design
+```
+
+---
+
+# Current Capabilities
+
+✅ Product Experiments
+
+✅ Marketing Experiments
+
+✅ A/B Tests
+
+✅ Holdout Experiments
+
+✅ Hypothesis Generation
+
+✅ Sample Size Calculation
+
+✅ Experiment Duration Estimation
+
+✅ Opportunity Cost Calculation
+
+✅ Business-Friendly Explanations
+
+---
+
+# Design Decisions
+
+### Conversational instead of Forms
+
+Rather than asking users to complete a long questionnaire, the agent dynamically asks only the questions required for the current experiment.
+
+---
+
+### Deterministic Statistics
+
+Statistical calculations are performed in Python rather than by the LLM to ensure reproducible and mathematically correct outputs.
+
+The LLM is responsible for reasoning.
+
+Python is responsible for computation.
+
+---
+
+### Business-first Outputs
+
+The goal isn't to teach statistics.
+
+The goal is to help Product Managers and Marketers make better experimentation decisions.
+
+Outputs are therefore written in business language instead of statistical jargon wherever possible.
+
+---
+
+# Tech Stack
+
+- **LangChain** – Agent orchestration
+- **OpenAI GPT-4o** – Experiment reasoning & conversation
+- **Streamlit** – User Interface
+- **Python** – Statistical calculations
+- **SciPy** – Power analysis & sample size
+- **Pandas** – Data processing
+
+---
+
+# Project Structure
+
+```
+experiment-agent/
+
+├── app.py
+├── tools/
+│   ├── sample_size.py
+│   ├── opportunity_cost.py
+│   ├── hypothesis.py
+│   └── experiment_detector.py
+│
+├── prompts/
+│
+├── utils/
+│
+├── requirements.txt
+│
+└── README.md
+```
+
+---
+
+# Getting Started
 
 ```bash
-# Clone repo
 git clone https://github.com/kavita-solves/experiment-agent.git
+
 cd experiment-agent
 
-# Create virtual environment
 python -m venv venv
+
 source venv/bin/activate
 
-# Install dependencies
 pip install -r requirements.txt
 
-# Add API keys
 cp .env.example .env
-# Edit .env with your OpenAI key
 
-# Run
+# Add your OpenAI API Key
+
 streamlit run app.py
 ```
 
+---
 
-## Known Limitations
+# Current Limitations
 
-- NovaMart context hardcoded — multi-tenant support coming
-- User level randomization only — Geo experiments coming
-- Marketing channels only for opportunity cost calculation
-- Agent may occasionally skip clarifying questions (LangGraph forced flow in progress)
+- Configured for a single business context
+- User-level randomization only
+- Opportunity cost currently supports marketing use cases
+- Does not yet support Geo Experiments
+- No experiment memory between sessions
 
-## Coming Soon
+---
 
-- PDF export of experiment design
-- Experiment memory — save and search past experiments
-- Dashboard — view all experiments, outcomes, learnings
-- Multi-tenant support — company specific context
-- Geo experiment support
-- Results Analyzer — upload results CSV, get plain English verdict
+# Roadmap
 
-## Built By
+### Near Term
 
-Kavita Malhotra — Staff Data Scientist
-[LinkedIn](https://linkedin.com/in/kavita-malhotra-in)
-[GitHub](https://github.com/kavita-solves)
+- PDF Export
+- Experiment History
+- Experiment Search
+- Multi-company Context
+- Geo Experiments
+
+### Future
+
+- Bayesian Experiment Design
+- Sequential Testing
+- Experiment Results Analyzer
+- Knowledge Base of Previous Experiments
+- Automatic Design Review
+- AI Recommendations based on past learnings
+
+---
+
+# Lessons Learned
+
+The hardest part wasn't building the agent.
+
+It was deciding what should be deterministic and what should remain conversational.
+
+Some tasks—such as hypothesis generation and follow-up questioning—benefit from an LLM.
+
+Others—such as sample size calculation and statistical power—should remain deterministic.
+
+Finding the right boundary between reasoning and computation was the most interesting design challenge in this project.
+
+---
+
+# Built By
+
+**Kavita Malhotra**
+
+Staff Data Scientist | Experimentation | Causal Inference | Growth Measurement
+
+- 💼 LinkedIn: https://linkedin.com/in/kavita-malhotra-in
+- 💻 GitHub: https://github.com/kavita-solves
