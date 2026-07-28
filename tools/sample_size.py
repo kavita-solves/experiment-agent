@@ -88,5 +88,5 @@ def calculate_sample_size_continuous(
         "duration_note": "Minimum 7 days recommended to account for weekly seasonality effects.",
         "statistical_power": f"{power*100:.0f}%",
         "significance_level": f"{(1-significance)*100:.0f}%",
-        "mde": f"{mde*100:.2f}%"
+        "mde": f"{mde_abs*100:.2f}%"
     }

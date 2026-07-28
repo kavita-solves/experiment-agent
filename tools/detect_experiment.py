@@ -57,7 +57,7 @@ def detect_channel(description:  str, experiment_type: str) -> str:
     else:
         if any(k in description_l for k in ["in-app", "feature", "button", "ui", " in-app checkout"]):
             return "In-app"
-        elif any(k in description_l for k in ["web checkout", "landing", "web funnel", "web flow"]):
+        elif any(k in description_l for k in ["web checkout", "landing", "web funnel", "web flow","website","site"]):
             return "Web"
         elif any(k in description_l for k in ["checkout", "funnel", "flow"]):
             return "Unclear - Web or In-app"
