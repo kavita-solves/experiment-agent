@@ -40,7 +40,7 @@ if "example_prompt" not in st.session_state:
 header_col, reset_col = st.columns([5, 1])
 
 with header_col:
-    st.title("🧪 Experiment Designer")
+    st.title("🧪 AI Experiment Design Copilot")
     st.caption(
         "From idea to experiment design in minutes."
     )
