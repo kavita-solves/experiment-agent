@@ -1,10 +1,10 @@
-# 🧪 Experiment Designer AI
+# 🧪 AI Experiment Design Copilot
 
-> Designing good experiments shouldn't require waiting for a data scientist.
+> Helping teams design better experiments before implementation.
 
-Experiment Designer AI is an AI-powered assistant that helps Product Managers, Growth teams, and Marketers design statistically rigorous A/B tests and holdout experiments through a guided conversation.
+AI Experiment Design Copilot is an AI-powered assistant that helps Product Managers, Marketers, and Analysts design better experiments through a guided conversation.
 
-Instead of generating a generic template, the agent asks follow-up questions, challenges ambiguous hypotheses, performs statistical calculations, and produces a complete experiment design in business language.
+Instead of filling in a static template, the agent asks follow-up questions, challenges ambiguous assumptions, performs statistical calculations, and produces a structured experiment brief in business language.
 
 ---
 
@@ -12,11 +12,9 @@ Instead of generating a generic template, the agent asks follow-up questions, ch
 
 After spending 10+ years designing experiments across growth and marketing teams, I noticed the same pattern.
 
-Coming up with an experiment idea is usually easy.
+Coming up with an experiment idea is easy. Designing a rigorous experiment is much harder.
 
-Designing a good experiment is not.
-
-Questions like:
+Before an experiment launches, teams often ask:
 
 - Is this hypothesis measurable?
 - Should this be an A/B test or a holdout?
@@ -25,12 +23,25 @@ Questions like:
 - What should I measure?
 - What happens if we hold users out?
 
-almost always end up with a data scientist.
+These discussions almost always end up involving a data scientist or experimentation expert.
 
-I wanted to explore whether an AI agent could guide teams through that process while applying experimentation best practices.
+This project explores whether an AI assistant can guide those conversations while applying experimentation best practices.
 
 ---
 
+## Who is this for?
+
+This project is intended for:
+
+• Product Managers validating experiment ideas before implementation.
+
+• Growth Marketers planning campaign experiments.
+
+• Data Scientists and Analysts looking for a structured starting point for experiment design.
+
+• Teams aiming to standardize experimentation best practices.
+
+---
 ## Demo
 
 ![Experiment Designer Demo](Experiment_agent_demo.gif)
@@ -38,6 +49,27 @@ I wanted to explore whether an AI agent could guide teams through that process w
 ---
 
 ## What the Agent Does
+        Idea
+
+        ↓
+
+        Conversation
+
+        ↓
+
+        Clarifying Questions
+
+        ↓
+
+        Experiment Design
+
+        ↓
+
+        Statistics
+
+        ↓
+
+        Experiment Brief
 
 The agent guides users through the complete experiment design process.
 
@@ -68,12 +100,12 @@ Creates recommendations for:
 - Treatment & Control groups
 - Randomization strategy
 - Eligibility criteria
-- Success metrics
+- Primary metrics
 - Guardrail metrics
 
 ---
 
-### 4. Perform Statistical Calculations
+### 4. Validate Statistical Feasibility
 
 Calculates:
 
@@ -87,15 +119,13 @@ using deterministic Python calculations.
 
 ---
 
-### 5. Evaluate Business Trade-offs
+### 5. Review Business Considerations
 
-For holdout experiments, the agent estimates:
+For holdout experiments, the agent highlights key trade-offs such as:
 
-- Opportunity Cost
-- Revenue at Risk
-- Expected Learning Value
-
-to help teams balance business impact with experimentation rigor.
+- Users intentionally excluded from treatment
+- Potential short-term business impact
+- Assumptions to validate before launch
 
 ---
 
@@ -113,55 +143,52 @@ The final output includes:
 - Sample Size
 - Experiment Duration
 - Opportunity Cost
-- Recommendations & Risks
+- Recommendations & Design Risks
 
 ---
 
 # Architecture
 
 ```
-             User
-              │
-              ▼
-        Streamlit UI
-              │
-              ▼
-      LangChain Agent
-              │
-     ┌────────┼─────────┐
-     │        │         │
-     ▼        ▼         ▼
+                User
+                  │
+                  ▼
+            Streamlit UI
+                  │
+                  ▼
+          LangChain Agent
+                  │
+      ┌───────────┼────────────┐
+      ▼           ▼            ▼
 
-Experiment   Statistical   Business
-Reasoning    Calculations  Logic
+ Experiment   Metric      Statistics
+ Detection   Selection    Calculator
 
-     │
-     ▼
-
-Experiment Design
+      ▼
+ Structured Experiment Brief
 ```
 
 ---
 
 # Current Capabilities
 
-✅ Product Experiments
-
-✅ Marketing Experiments
+Design
 
 ✅ A/B Tests
-
-✅ Holdout Experiments
-
+✅ Holdout Tests
 ✅ Hypothesis Generation
 
-✅ Sample Size Calculation
+Analysis
 
-✅ Experiment Duration Estimation
+✅ Primary Metric Recommendation
+✅ Guardrail Recommendation
+✅ Sample Size
+✅ Duration Estimation
 
-✅ Opportunity Cost Calculation
+Output
 
-✅ Business-Friendly Explanations
+✅ Experiment Brief
+✅ Business Recommendations
 
 ---
 
@@ -201,28 +228,24 @@ Outputs are therefore written in business language instead of statistical jargon
 - **Python** – Statistical calculations
 - **SciPy** – Power analysis & sample size
 - **Pandas** – Data processing
+- **Pydantic** – Structured tool outputs
 
 ---
 
-# Project Structure
+# Repository Highlights
 
 ```
 experiment-agent/
 
 ├── app.py
+│   ├── Main Streamlit interface
+├── agent.py
+│   ├── Conversation orchestration
 ├── tools/
-│   ├── sample_size.py
-│   ├── opportunity_cost.py
-│   ├── hypothesis.py
-│   └── experiment_detector.py
+│   ├── Statistical calculations & experiment logic
 │
-├── prompts/
-│
-├── utils/
-│
-├── requirements.txt
-│
-└── README.md
+├── README.md
+│   ├── Architecture and design
 ```
 
 ---
@@ -261,22 +284,29 @@ streamlit run app.py
 
 # Roadmap
 
-### Near Term
+## Phase 2 — Smarter Experiment Planning
 
-- PDF Export
-- Experiment History
-- Experiment Search
-- Multi-company Context
-- Geo Experiments
+- Support Geo Experiments
+- Company-specific experimentation guidelines
+- Experiment history and search
+- PDF export for sharing experiment briefs
+- Multi-session conversation memory
 
-### Future
+## Phase 3 — Learning from Past Experiments
 
-- Bayesian Experiment Design
-- Sequential Testing
-- Experiment Results Analyzer
-- Knowledge Base of Previous Experiments
-- Automatic Design Review
-- AI Recommendations based on past learnings
+- Search similar historical experiments
+- AI recommendations based on previous experiment outcomes
+- Knowledge base of experimentation best practices
+- Automatic experiment design review
+- Company-specific experimentation playbooks
+
+## Phase 4 — Advanced Experimentation
+
+- Bayesian experiment design
+- Sequential testing support
+- Experiment results analyzer
+- Power recalculation during an active experiment
+- CUPED and variance reduction recommendations
 
 ---
 
@@ -290,7 +320,7 @@ Some tasks—such as hypothesis generation and follow-up questioning—benefit f
 
 Others—such as sample size calculation and statistical power—should remain deterministic.
 
-Finding the right boundary between reasoning and computation was the most interesting design challenge in this project.
+Designing that boundary between LLM reasoning and deterministic computation turned out to be the most interesting part of the project.
 
 ---
 
@@ -298,7 +328,8 @@ Finding the right boundary between reasoning and computation was the most intere
 
 **Kavita Malhotra**
 
-Staff Data Scientist | Experimentation | Causal Inference | Growth Measurement
+Staff Data Scientist with 10+ years of experience in experimentation,
+growth measurement, and causal inference.
 
 - 💼 LinkedIn: https://linkedin.com/in/kavita-malhotra-in
 - 💻 GitHub: https://github.com/kavita-solves
