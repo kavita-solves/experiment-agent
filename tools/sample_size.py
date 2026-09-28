@@ -8,43 +8,51 @@ def calculate_sample_size_proportion(
     baseline_rate: float,
     mde: float,
     daily_traffic: int,
-    split: float = -1 , # -1 = not provided
+    split: float | None = None,   # None = not provided (was -1 sentinel)
     power: float = 0.80,
     significance: float = 0.05
 ) -> dict:
     """Calculate sample size for proportion metrics like
     conversion rate, open rate, click rate.
-    
+
     IMPORTANT: split parameter is required — no default value.
     split = fraction of users seeing NEW experience (treatment).
     Example: 50/50 split → split=0.5, 80/20 split → split=0.8
-    
+
     Always ask PM for split before calling this tool.
     Never assume split=0.5 without confirming with PM.
     """
-    if split == -1:
+    if split is None or not (0 < split < 1):
         return {
-            "error": "Split not provided. Please ask PM: What percentage of users should see the new experience? Options: 10%, 20%, 50%, 80%"
+            "error": "Split not provided or invalid. Please ask PM: What percentage of users should see the new experience? Options: 10%, 20%, 50%, 80%"
         }
 
     z_alpha = stats.norm.ppf(1 - significance / 2)
     z_beta = stats.norm.ppf(power)
 
-    p1 = baseline_rate
-    p2 = baseline_rate + mde
+    p1 = baseline_rate          # control
+    p2 = baseline_rate + mde    # treatment
 
-    n = (
+    # Total N across BOTH arms.
+    # Control variance is scaled by the control share (1 - split),
+    # treatment variance by the treatment share (split).
+    n_total = (
         (z_alpha + z_beta) ** 2 *
-        (p1 * (1 - p1) / split + p2 * (1 - p2) / (1 - split))
+        (p1 * (1 - p1) / (1 - split) + p2 * (1 - p2) / split)
     ) / (mde ** 2)
 
-    minimum_duration = 7 # minimum 7 days - seasonality cover karne ke liye
-    calc_duration = math.ceil(math.ceil(n * 2) / daily_traffic) # calculated duration based on the inputs
+    n_treatment = math.ceil(n_total * split)
+    n_control = math.ceil(n_total * (1 - split))
+    total = n_treatment + n_control
+
+    minimum_duration = 7  # minimum 7 days - seasonality cover karne ke liye
+    calc_duration = math.ceil(total / daily_traffic)
     duration = max(calc_duration, minimum_duration)
 
     return {
-        "sample_per_variant": math.ceil(n),
-        "total_sample": math.ceil(n) * 2,
+        "sample_treatment": n_treatment,
+        "sample_control": n_control,
+        "total_sample": total,
         "baseline_rate": f"{p1 * 100:.2f}%",
         "target_rate": f"{p2 * 100:.2f}%",
         "duration_days": duration,
@@ -65,7 +73,8 @@ def calculate_sample_size_continuous(
     significance: float = 0.05
 ) -> dict:
     """Calculate sample size for continuous metrics like
-    revenue per user, session duration, order value."""
+    revenue per user, session duration, order value.
+    Assumes an equal (50/50) split."""
 
     z_alpha = stats.norm.ppf(1 - significance / 2)
     z_beta = stats.norm.ppf(power)
@@ -74,8 +83,8 @@ def calculate_sample_size_continuous(
         2 * (std_dev ** 2) * (z_alpha + z_beta) ** 2
     ) / (mde_abs ** 2)
 
-    minimum_duration = 7 # minimum 7 days - seasonality cover karne ke liye
-    calc_duration = math.ceil(math.ceil(n * 2) / daily_traffic) # calculated duration based on the inputs
+    minimum_duration = 7  # minimum 7 days - seasonality cover karne ke liye
+    calc_duration = math.ceil(math.ceil(n * 2) / daily_traffic)
     duration = max(calc_duration, minimum_duration)
 
     return {
@@ -88,5 +97,5 @@ def calculate_sample_size_continuous(
         "duration_note": "Minimum 7 days recommended to account for weekly seasonality effects.",
         "statistical_power": f"{power*100:.0f}%",
         "significance_level": f"{(1-significance)*100:.0f}%",
-        "mde": f"{mde_abs*100:.2f}%"
+        "mde_absolute": mde_abs,   # was formatted as a percent, wrong for $/minutes
     }
