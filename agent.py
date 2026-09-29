@@ -14,7 +14,8 @@ from tools import (
     detect_experiment,
     detect_channel,
     recommend_guardrails,
-    recommend_primary_metric
+    recommend_primary_metric,
+    lookup_past_experiments
     #get_experiment_split
 )
 today = date.today().strftime("%B %d, %Y")
